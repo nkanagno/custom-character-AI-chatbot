@@ -1,6 +1,5 @@
 langchain==0.1.13
 streamlit==1.32.2
-chromadb==0.4.24
 pypdf==4.1.0
 sentence_transformers
 boto3
@@ -13,3 +12,4 @@ uvicorn
 xlrd
 streamlit
 streamlit_option_menu
+pysqlite3-binary
