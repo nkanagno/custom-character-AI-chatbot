@@ -1,7 +1,6 @@
 import streamlit as st
 import sqlite3
 import time
-import requests
 import os
 import base64
 from PIL import Image
@@ -13,6 +12,8 @@ import chromadb
 from openai import OpenAI
 from chromadb.utils import embedding_functions
 import shutil
+from response_fuctions import *
+
 
 load_dotenv()
 openai_key = os.getenv("OPENAI_API_KEY")
@@ -92,8 +93,6 @@ def create_embeddings():
     for chunk in text_chunks:
         st.write("==== inserting chunks into db;; ====")
         collection.upsert(ids=[chunk["id"]], documents=[chunk["text"]],embeddings=[chunk['embedding']])
-
-API_URL = "http://127.0.0.1:8000/ask/alan_kay"
 
 tabs = ["Character creation"]
 if os.path.isdir("./data/chroma_persistent_storage"):
@@ -181,16 +180,7 @@ if selected_tab == "Character creation":
     if create_embeddings_button:
         create_embeddings()
 
-def API_response(API_URL,question,prompt):
-    try:
-        response = requests.post(API_URL, json={"question": question,"prompt": prompt})
-        if response.status_code == 200:
-            response = response.json()["answer"]
-        else:
-            response = "I'm sorry, but I couldn't process your request."
-    except requests.exceptions.RequestException:
-        response = "Error: Unable to reach the backend API."
-    return response
+
 
 def get_circular_image_html(img, width=150):
     try:
@@ -252,7 +242,8 @@ if selected_tab == "Chatbot":
         with st.chat_message("assistant", avatar=ALAN_KAY_PROFILE_IMG):
             status_text = st.empty()
             status_text.markdown("Alan Kay is typing...")
-            assistant_response = API_response(API_URL,user_input,row[1])
+            chunks = retrieve_documents(user_input)
+            assistant_response = generate_response(user_input, chunks, row[1])
             message_placeholder = st.empty()
             status_text.empty()
             full_response = ""

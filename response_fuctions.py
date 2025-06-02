@@ -3,11 +3,7 @@ from dotenv import load_dotenv
 import chromadb
 from openai import OpenAI
 from chromadb.utils import embedding_functions
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI
 from pydantic import BaseModel
-
-
 
 load_dotenv()
 openai_key = os.getenv("OPENAI_API_KEY")
@@ -64,22 +60,3 @@ def generate_response(question, relevant_chunks,prompt):
     return answer
 
 
-
-app = FastAPI()
-class QuestionRequest(BaseModel):
-    question: str
-    prompt: str
-# Enable CORS
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins (or specify frontend URL)
-    allow_credentials=True,
-    allow_methods=["*"],  # Allow all methods
-    allow_headers=["*"],  # Allow all headers
-)
-@app.post("/ask/alan_kay")
-async def ask_question(request: QuestionRequest):
-    chunks = retrieve_documents(request.question)
-    print(chunks)
-    response = generate_response(request.question, chunks, request.prompt)
-    return {"answer": response}
