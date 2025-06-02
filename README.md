@@ -29,12 +29,6 @@ After obtaining your API key, add it to a `.env` file in your project root with 
 OPENAI_API_KEY=your_api_key_here
 ```
 
-## Run Custom API
-The following command runs a custom api server that so the webapp chatbot can send post requests and receives the necessary responses:
-```
-uvicorn API:app --reload
-```
-
 ## Run webapp.py
 To run the application you should enter the following command to your terminal:
 ```
