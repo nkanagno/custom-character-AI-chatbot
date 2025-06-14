@@ -60,9 +60,9 @@ streamlit run webapp.py
 ## Feed the chat with your character data:
 <img width="765" alt="Screenshot 2025-05-20 at 11 48 29 PM" src="https://github.com/user-attachments/assets/56a7b8a4-04cf-44c0-bc58-a76dbeb819f9" />
 
-## References:
+## Important Links:
+- [Application online link](https://custom-character-ai-chatbot.onrender.com/)
+- [Streamlit Documentation](https://docs.streamlit.io/)
+- [Alan kay quora profile](https://www.quora.com/profile/Alan-Kay-11)
 - [RAG wikipedia](https://en.wikipedia.org/wiki/Retrieval-augmented_generation)
 - [RAG Fundamentals and Advanced Techniques](https://www.youtube.com/watch?v=ea2W8IogX80)
-- [Streamlit documentation](https://docs.streamlit.io/)
-- [Alan kay quora profile](https://www.quora.com/profile/Alan-Kay-11)
-- [Application](https://custom-character-ai-chatbot.onrender.com/)
