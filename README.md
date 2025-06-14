@@ -12,7 +12,7 @@
 
 <img width="661" alt="Application Architecture diagram" src="https://github.com/user-attachments/assets/2e23c6f0-c9e8-4da6-a3cd-25c41b46a8da" />
 
-### Short diagram Description:
+### Diagram Description:
 The application architecture is structured around three main conceptual sections: `Create Custom Character Tab`, `Text Data Preprocessing`, and `Alan Kay Chatbot Tab`.
 
 * **Create Custom Character Tab:** This section allows users to create and manage custom characters for their chatbot. Users can submit their character data, including a knowledge base text file, through a Streamlit form, which then stores the information in `characters.db`. After submission, users can generate embeddings from the uploaded text data by pressing the `Feed the chat with your uploaded text data` button.
