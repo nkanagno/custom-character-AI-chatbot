@@ -99,13 +99,13 @@ if os.path.isdir("./data/chroma_persistent_storage"):
     tabs = ["Character creation", "Chatbot"]
 icons = ["bi-box-arrow-in-right"] + ["person-fill"]
 
-selected_tab = option_menu(
-    menu_title="Select a tab",
-    options=tabs,
-    default_index=0,
-    icons=icons,
-    orientation="horizontal",
-)
+# selected_tab = option_menu(
+#     menu_title="Select a tab",
+#     options=tabs,
+#     default_index=0,
+#     icons=icons,
+#     orientation="horizontal",
+# )
 
 conn = sqlite3.connect('characters.db', check_same_thread=False)  # allow Streamlit threads
 c = conn.cursor()
@@ -118,60 +118,60 @@ if row and row[3]:
     except Exception as e:
         st.error(f"❌ Failed to load profile image: {e}")
 
-if selected_tab == "Character creation":
-    st.title("🧠 Create Your Own Character Chatbot")
-    c.execute("SELECT name, prompt, text_data, image, description FROM characters ORDER BY id DESC LIMIT 1")
-    saved_character = c.fetchone()
-    default_name = saved_character[0] if saved_character else ""
-    default_prompt = saved_character[1] if saved_character else ""
-    default_description = saved_character[4] if saved_character else ""
+# if selected_tab == "Character creation":
+#     st.title("🧠 Create Your Own Character Chatbot")
+#     c.execute("SELECT name, prompt, text_data, image, description FROM characters ORDER BY id DESC LIMIT 1")
+#     saved_character = c.fetchone()
+#     default_name = saved_character[0] if saved_character else ""
+#     default_prompt = saved_character[1] if saved_character else ""
+#     default_description = saved_character[4] if saved_character else ""
     
     
-    # --- FORM ---
-    with st.form("character_form"):
-        name = st.text_input("Character Name", value=default_name)
-        prompt = st.text_area("System Prompt (personality, tone, etc.)", value=default_prompt)
-        text_file = st.file_uploader("Upload .txt file for knowledge base", type=["txt"])
-        image_file = st.file_uploader("Upload Profile Image (JPG/PNG)", type=["jpg", "png"])
-        description = st.text_area("Description", value=default_description)
+#     # --- FORM ---
+#     with st.form("character_form"):
+#         name = st.text_input("Character Name", value=default_name)
+#         prompt = st.text_area("System Prompt (personality, tone, etc.)", value=default_prompt)
+#         text_file = st.file_uploader("Upload .txt file for knowledge base", type=["txt"])
+#         image_file = st.file_uploader("Upload Profile Image (JPG/PNG)", type=["jpg", "png"])
+#         description = st.text_area("Description", value=default_description)
 
-        if saved_character:
-            st.markdown("📝 Using last saved files unless new ones are uploaded.")
+#         if saved_character:
+#             st.markdown("📝 Using last saved files unless new ones are uploaded.")
 
-        submitted = st.form_submit_button("💾 Save Character")
-        if submitted:
-            text_data = text_file.read().decode("utf-8") if text_file else saved_character[2]
-            image_bytes = image_file.read() if image_file else saved_character[3]
-            if not (name and prompt and text_data and image_bytes):
-                st.error("⚠️ Please complete all fields before saving.")
-            else:
-                c.execute("DELETE FROM characters")
-                conn.commit()
-                c.execute(
-                    "INSERT INTO characters (name, prompt, text_data, image, description) VALUES (?, ?, ?, ?, ?)",
-                    (name, prompt, text_data, image_bytes, description)
-                )
-                conn.commit()
-                st.success(f"✅ Character '{name}' saved successfully!")
+#         submitted = st.form_submit_button("💾 Save Character")
+#         if submitted:
+#             text_data = text_file.read().decode("utf-8") if text_file else saved_character[2]
+#             image_bytes = image_file.read() if image_file else saved_character[3]
+#             if not (name and prompt and text_data and image_bytes):
+#                 st.error("⚠️ Please complete all fields before saving.")
+#             else:
+#                 c.execute("DELETE FROM characters")
+#                 conn.commit()
+#                 c.execute(
+#                     "INSERT INTO characters (name, prompt, text_data, image, description) VALUES (?, ?, ?, ?, ?)",
+#                     (name, prompt, text_data, image_bytes, description)
+#                 )
+#                 conn.commit()
+#                 st.success(f"✅ Character '{name}' saved successfully!")
 
-    c.execute("SELECT name, prompt, text_data, image, description FROM characters ORDER BY id DESC LIMIT 1")
-    row = c.fetchone()
-    if row:
-        st.subheader(f"Character: {row[0]}")
-        st.markdown(f"**Prompt:** {row[1]}")
-        st.markdown("**Sample from text data (first 300 chars):**")
-        st.code(row[2][:300] + "..." if len(row[2]) > 300 else row[2])
-        st.markdown("**Profile Image:**")
-        image = Image.open(io.BytesIO(row[3]))
-        st.image(image, width=150)
-        st.markdown(f"**Description:** {row[4]}")
-    else:
-        st.info("No character saved yet.")
+#     c.execute("SELECT name, prompt, text_data, image, description FROM characters ORDER BY id DESC LIMIT 1")
+#     row = c.fetchone()
+#     if row:
+#         st.subheader(f"Character: {row[0]}")
+#         st.markdown(f"**Prompt:** {row[1]}")
+#         st.markdown("**Sample from text data (first 300 chars):**")
+#         st.code(row[2][:300] + "..." if len(row[2]) > 300 else row[2])
+#         st.markdown("**Profile Image:**")
+#         image = Image.open(io.BytesIO(row[3]))
+#         st.image(image, width=150)
+#         st.markdown(f"**Description:** {row[4]}")
+#     else:
+#         st.info("No character saved yet.")
 
-    st.write("## Press the button to create your character chatbot")
-    create_embeddings_button = st.button("Feed the chat with your uploaded text data")
-    if create_embeddings_button:
-        create_embeddings()
+#     st.write("## Press the button to create your character chatbot")
+#     create_embeddings_button = st.button("Feed the chat with your uploaded text data")
+#     if create_embeddings_button:
+#         create_embeddings()
 
 
 
@@ -205,47 +205,47 @@ def get_circular_image_html(img, width=150):
 
 # Spacing to prevent overlap
 
-if selected_tab == "Chatbot":
-    with st.sidebar:
-        st.markdown(get_circular_image_html(CUSTOM_CHARACTER_PROFILE_IMG), unsafe_allow_html=True)
-        st.write("# Profile:")
-        st.write(f'''{row[4]}''')
-    st.markdown('<h1 class="chat-title">AI Chatbot</h1>', unsafe_allow_html=True)
+# if selected_tab == "Chatbot":
+with st.sidebar:
+    st.markdown(get_circular_image_html(CUSTOM_CHARACTER_PROFILE_IMG), unsafe_allow_html=True)
+    st.write("# Profile:")
+    st.write(f'''{row[4]}''')
+st.markdown('<h1 class="chat-title">AI Chatbot</h1>', unsafe_allow_html=True)
 
-    # Scrollable chat messages container
-    st.markdown('<div class="chat-container">', unsafe_allow_html=True)
+# Scrollable chat messages container
+st.markdown('<div class="chat-container">', unsafe_allow_html=True)
 
-    if 'chat_history' not in st.session_state:
-        st.session_state.chat_history = []
+if 'chat_history' not in st.session_state:
+    st.session_state.chat_history = []
 
-    for message in st.session_state.chat_history:
-        if message["role"] == 'assistant':
-            with st.chat_message("assistant", avatar=CUSTOM_CHARACTER_PROFILE_IMG):
-                st.write(message['message'])
-        else:
-            with st.chat_message("user"):
-                st.write(message['message'])
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    if user_input := st.chat_input("Ask me anything...", key="user_input"):
-        user_message = {"role": "user", "message": user_input}
-        st.session_state.chat_history.append(user_message)
-        with st.chat_message("user"):
-            st.markdown(user_input)
+for message in st.session_state.chat_history:
+    if message["role"] == 'assistant':
         with st.chat_message("assistant", avatar=CUSTOM_CHARACTER_PROFILE_IMG):
-            status_text = st.empty()
-            status_text.markdown(row[0] +" is typing...")
-            chunks = retrieve_documents(user_input)
-            assistant_response = generate_response(user_input, chunks, row[1])
-            message_placeholder = st.empty()
-            status_text.empty()
-            full_response = ""
-            for chunk in assistant_response.split():
-                full_response += chunk + " "
-                time.sleep(0.05)
-                message_placeholder.markdown(full_response + "▌")
-            
-            message_placeholder.markdown(full_response,unsafe_allow_html=True)
-            
-        chatbot_message = {"role": "assistant", "message": assistant_response}
-        st.session_state.chat_history.append(chatbot_message)
+            st.write(message['message'])
+    else:
+        with st.chat_message("user"):
+            st.write(message['message'])
+st.markdown('</div>', unsafe_allow_html=True)
+
+if user_input := st.chat_input("Ask me anything...", key="user_input"):
+    user_message = {"role": "user", "message": user_input}
+    st.session_state.chat_history.append(user_message)
+    with st.chat_message("user"):
+        st.markdown(user_input)
+    with st.chat_message("assistant", avatar=CUSTOM_CHARACTER_PROFILE_IMG):
+        status_text = st.empty()
+        status_text.markdown(row[0] +" is typing...")
+        chunks = retrieve_documents(user_input)
+        assistant_response = generate_response(user_input, chunks, row[1])
+        message_placeholder = st.empty()
+        status_text.empty()
+        full_response = ""
+        for chunk in assistant_response.split():
+            full_response += chunk + " "
+            time.sleep(0.05)
+            message_placeholder.markdown(full_response + "▌")
+        
+        message_placeholder.markdown(full_response,unsafe_allow_html=True)
+        
+    chatbot_message = {"role": "assistant", "message": assistant_response}
+    st.session_state.chat_history.append(chatbot_message)
